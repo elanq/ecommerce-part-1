@@ -38,7 +38,24 @@ services:
       - POSTGRES_PASSWORD=passworduntudkecommerce1234)(*
     volumes:
       - ecommerce_data:/var/lib/postgresql/data
-
+      - ./init-sonarqube-db.sh:/docker-entrypoint-initdb.d/init-sonarqube-db.sh
+  sonarqube:
+    image: sonarqube:community
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://db:5432/sonar
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=sonar
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    depends_on:
+      - db
 volumes:
   ecommerce_data:
   redis_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
